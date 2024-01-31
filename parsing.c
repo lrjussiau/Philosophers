@@ -53,4 +53,6 @@ void	parsing(t_data *data, char **av)
 		data->nb_max_meal = (int)ft_atol(valid_input(av[6]));
 	else
 		data->nb_max_meal = -1;
+	if (data->t_die < 60 || data->t_eat < 60 || data->t_sleep < 60)
+		error("You have to give more than 60 ms for each actions")
 }

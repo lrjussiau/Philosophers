@@ -20,8 +20,20 @@
 # include <sys/time.h>
 # include <stdbool.h>
 # include <limits.h>
+# include <errno.h>
 
 typedef struct s_data	t_data;
+
+typedef enum e_mutexcode
+{
+	LOCK,
+	UNLOCK,
+	INIT,
+	DESTROY,
+	CREATE,
+	JOIN,
+	DETACH,
+}		t_mutexcode;
 
 typedef struct s_fork
 {
@@ -46,7 +58,6 @@ struct s_data
 	int		nb_philo;
 	int		t_eat;
 	int		t_sleep;
-	int		t_think;
 	int		t_die;
 	int		nb_max_meal;
 	int		time_start;
@@ -63,5 +74,9 @@ long	ft_atol(const char *s);
 bool	is_space(char c);
 bool	is_digit(char c);
 char	*valid_input(char *str);
+
+//Safe Function
+void	*safe_malloc(unsigned int bytes);
+void	safe_mutex(pthread_mutex_t *mutex, t_mutexcode mutex_code);
 
 #endif
