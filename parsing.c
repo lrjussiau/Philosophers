@@ -10,58 +10,47 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_H
-# define PHILO_H
+#include "philo.h"
 
-# include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <pthread.h>
-# include <sys/time.h>
-# include <stdbool.h>
-# include <limits.h>
-
-typedef struct s_data	t_data;
-
-typedef struct s_fork
+bool	is_space(char c)
 {
-	pthread_mutex_t	fork;
-	int				id;
-}		t_fork;
+	return ((c >= 9 && c <= 13) || c == 32);
+}
 
-typedef struct s_philo
+bool	is_digit(char c)
 {
-	int			id;
-	int			nb_meal;
-	bool		full;
-	int			t_last_meal;
-	t_fork		*left_fork;
-	t_fork		*right_fork;
-	pthread_t	thread_id;
-	t_data		*data;
-}		t_philo;
+	return (c >= '0' && c <= '9');
+}
 
-struct s_data
+bool	check_len(char	*str)
 {
-	int		nb_philo;
-	int		t_eat;
-	int		t_sleep;
-	int		t_think;
-	int		t_die;
-	int		nb_max_meal;
-	int		time_start;
-	bool	end_simulation;
-	t_fork	*fork;
-	t_philo	*philo;
-};
+	return (ft_atol(str) < INT_MAX);
+}
 
-//Utils
-void	error(char *str);
-long	ft_atol(const char *s);
+char	*valid_input(char *str)
+{
+	char	*valid;
 
-//Parsing
-bool	is_space(char c);
-bool	is_digit(char c);
-char	*valid_input(char *str);
+	valid = NULL;
+	while(is_space(*str))
+		str++;
+	if (*str == '-')
+		error("You can not input negative number");
+	if (!is_digit(*str))
+		error("You have to input number");
+	if (check_len(str))
+		valid = str;
+	return (valid);
+}
 
-#endif
+void	parsing(t_data *data, char **av)
+{
+	data->nb_philo = (int)ft_atol(valid_input(av[1]));
+	data->t_die = (int)ft_atol(valid_input(av[2]));
+	data->t_eat = (int)ft_atol(valid_input(av[3]));
+	data->t_sleep = (int)ft_atol(valid_input(av[4]));
+	if (av[5])
+		data->nb_max_meal = (int)ft_atol(valid_input(av[6]));
+	else
+		data->nb_max_meal = -1;
+}
