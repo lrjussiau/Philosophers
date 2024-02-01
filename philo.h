@@ -30,10 +30,14 @@ typedef enum e_mutexcode
 	UNLOCK,
 	INIT,
 	DESTROY,
-	CREATE,
-	JOIN,
-	DETACH,
 }		t_mutexcode;
+
+typedef enum e_threadcode
+{
+	CREATE,
+	DETACH,
+	JOIN,
+}		t_threadcode;
 
 typedef struct s_fork
 {
@@ -78,5 +82,7 @@ char	*valid_input(char *str);
 //Safe Function
 void	*safe_malloc(unsigned int bytes);
 void	safe_mutex(pthread_mutex_t *mutex, t_mutexcode mutex_code);
+void	safe_thread(pthread_t *thread, t_threadcode thread_code, 
+			void *data, void *(*foo)(void *));
 
 #endif
