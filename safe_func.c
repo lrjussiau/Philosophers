@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:53:00 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/02 07:28:21 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/02 10:24:00 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,7 @@ void	*safe_malloc(unsigned int bytes)
 	ret = malloc(bytes);
 	if (!ret)
 		error("malloc failed");
-	else
-		return (ret);
+	return (ret);
 }
 
 static void	handle_mutex_error(int status, t_mutexcode mutex_code)
@@ -73,16 +72,16 @@ void	safe_mutex(pthread_mutex_t *mutex, t_mutexcode mutex_code)
 		error("Wrong Mutex code");
 }
 
-void	safe_thread(pthread_t *thread, t_threadcode thread_code,
-			void *data, void *(*foo)(void *))
+void	safe_thread(pthread_t *thread, void *(*foo)(void *), void *data,
+			t_threadcode thread_code)
 {
 	if (thread_code == JOIN)
-		handle_thread_error(pthread_join(thread, NULL), thread_code);
+		handle_thread_error(pthread_join(*thread, NULL), thread_code);
 	else if (thread_code == CREATE)
 		handle_thread_error(pthread_create(thread, NULL, foo, data),
 			thread_code);
 	else if (thread_code == DETACH)
-		handle_thread_error(pthread_detach(thread), thread_code);
+		handle_thread_error(pthread_detach(*thread), thread_code);
 	else
 		error("Wrong Thread code");
 }

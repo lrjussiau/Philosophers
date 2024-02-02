@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:46:30 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/02 07:22:15 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/02 10:54:59 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,14 +15,27 @@
 
 # include <stdio.h>
 # include <stdlib.h>
+# include <stdint.h>
+# include <sys/wait.h>
 # include <unistd.h>
+# include <stdbool.h>
+# include <errno.h>
+# include <string.h>
 # include <pthread.h>
 # include <sys/time.h>
-# include <stdbool.h>
 # include <limits.h>
-# include <errno.h>
 
 typedef struct s_data	t_data;
+
+typedef enum e_status
+{
+	EAT,
+	SLEEP,
+	THINK,
+	TAKE_RIGHT_FORK,
+	TAKE_LEFT_FORK,
+	DIED,
+}		t_status;
 
 typedef enum e_mutexcode
 {
@@ -39,6 +52,13 @@ typedef enum e_threadcode
 	JOIN,
 }		t_threadcode;
 
+typedef enum e_time_code
+{
+	SECONDS,
+	MILLISECOND,
+	MICROSECOND,
+}		t_time_code;
+
 typedef struct s_fork
 {
 	pthread_mutex_t	fork;
@@ -47,42 +67,63 @@ typedef struct s_fork
 
 typedef struct s_philo
 {
-	int			id;
-	int			nb_meal;
-	bool		full;
-	int			t_last_meal;
-	t_fork		*left_fork;
-	t_fork		*right_fork;
-	pthread_t	thread_id;
-	t_data		*data;
+	int				id;
+	long			nb_meal;
+	bool			full;
+	long			t_last_meal;
+	t_fork			*left_fork;
+	t_fork			*right_fork;
+	pthread_t		thread_id;
+	pthread_mutex_t	mutex_philo;
+	t_data			*data;
 }		t_philo;
 
 struct s_data
 {
-	int		nb_philo;
-	int		t_eat;
-	int		t_sleep;
-	int		t_die;
-	int		nb_max_meal;
-	int		time_start;
-	bool	end_simulation;
-	t_fork	*fork;
-	t_philo	*philo;
+	long			nb_philo;
+	long			t_eat;
+	long			t_sleep;
+	long			t_die;
+	long			nb_max_meal;
+	long			time_start;
+	bool			end_simulation;
+	bool			all_thread_ready;
+	pthread_mutex_t	mutex_data;
+	pthread_mutex_t	mutex_write;
+	t_fork			*fork;
+	t_philo			*philo;
 };
 
 //Utils
 void	error(char *str);
 long	ft_atol(const char *s);
+long	gettime(int time_code);
+void	precise_usleep(int usec, t_data *data);
 
 //Parsing
 bool	is_space(char c);
 bool	is_digit(char c);
 char	*valid_input(char *str);
+void	parsing(t_data *data, char **av);
+
+//Init
+void	init(t_data *data);
+void	wait_all_threads(t_data *data);
+void	simulation(t_data *data);
 
 //Safe Function
 void	*safe_malloc(unsigned int bytes);
 void	safe_mutex(pthread_mutex_t *mutex, t_mutexcode mutex_code);
-void	safe_thread(pthread_t *thread, t_threadcode thread_code, void *data,
-			void *(*foo)(void *));
+void	safe_thread(pthread_t *thread, void *(*foo)(void *), void *data,
+			t_threadcode thread_code);
+
+//Setters Getters
+bool	simulation_finish(t_data *data);
+long	get_long(pthread_mutex_t *mutex, long *value);
+void	set_long(pthread_mutex_t *mutex, long *dest, long value);
+bool	get_bool(pthread_mutex_t *mutex, bool *value);
+void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
+
+void	write_status(t_status status, t_philo *philo);
 
 #endif
