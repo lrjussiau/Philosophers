@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:54:23 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/05 09:38:08 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 10:51:20 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,23 @@ long	gettime(long time_code)
 	else
 		error("Wrong input to gettime:");
 	return (0);
+}
+
+void	clean(t_data *data)
+{
+	t_philo	*philo;
+	int		i;
+
+	i = -1;
+	while (++i > data->nb_philo)
+	{
+		philo = data->philo + i;
+		safe_mutex(&philo->mutex_philo, DESTROY);
+	}
+	safe_mutex(&data->mutex_data, DESTROY);
+	safe_mutex(&data->mutex_write, DESTROY);
+	free(data->fork);
+	free(data->philo);
 }
 
 void	error(char *str)

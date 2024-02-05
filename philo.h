@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:46:30 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/05 09:37:56 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 10:52:05 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -129,6 +129,8 @@ void	set_long(pthread_mutex_t *mutex, long *dest, long value);
 bool	get_bool(pthread_mutex_t *mutex, bool *value);
 void	set_bool(pthread_mutex_t *mutex, bool *dest, bool value);
 
+//Other
 void	write_status(t_status status, t_philo *philo);
+void	clean(t_data *data);
 
 #endif
