@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:46:30 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/02 10:54:59 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 09:37:56 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,8 +86,10 @@ struct s_data
 	long			t_die;
 	long			nb_max_meal;
 	long			time_start;
+	long			nb_thread_run;
 	bool			end_simulation;
 	bool			all_thread_ready;
+	pthread_t		monitor;
 	pthread_mutex_t	mutex_data;
 	pthread_mutex_t	mutex_write;
 	t_fork			*fork;
@@ -97,8 +99,8 @@ struct s_data
 //Utils
 void	error(char *str);
 long	ft_atol(const char *s);
-long	gettime(int time_code);
-void	precise_usleep(int usec, t_data *data);
+long	gettime(long time_code);
+void	precise_usleep(long usec, t_data *data);
 
 //Parsing
 bool	is_space(char c);
@@ -110,6 +112,9 @@ void	parsing(t_data *data, char **av);
 void	init(t_data *data);
 void	wait_all_threads(t_data *data);
 void	simulation(t_data *data);
+void	increase_long(pthread_mutex_t *mutex, long *value);
+bool	all_thread_run(pthread_mutex_t *mutex, long *thread, long philo_nb);
+void	*monitor_diner(void *value);
 
 //Safe Function
 void	*safe_malloc(unsigned int bytes);

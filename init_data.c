@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:53:00 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/02 10:27:36 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 08:26:51 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ void	init(t_data *data)
 	data->end_simulation = false;
 	data->philo = safe_malloc(sizeof(t_philo) * data->nb_philo);
 	data->fork = safe_malloc(sizeof(t_fork) * data->nb_philo);
+	data->nb_thread_run = 0;
 	while (i < data->nb_philo)
 	{
 		safe_mutex(&data->fork[i].fork, INIT);

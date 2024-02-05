@@ -6,11 +6,24 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/02/02 07:53:47 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/02 10:51:05 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 10:18:10 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
+
+void	*one_philo(void	*value)
+{
+	t_philo	*philo;
+
+	philo = (t_philo *)value;
+	wait_all_threads(philo->data);
+	set_long(&philo->mutex_philo, &philo->t_last_meal, gettime(MILLISECOND));
+	increase_long(&philo->data->mutex_data, &philo->data->nb_thread_run);
+	while (!simulation_finish(philo->data))
+		usleep(500);
+	return (NULL);
+}
 
 static void	eat(t_philo *philo)
 {
@@ -18,7 +31,7 @@ static void	eat(t_philo *philo)
 	write_status(TAKE_RIGHT_FORK, philo);
 	safe_mutex(&philo->left_fork->fork, LOCK);
 	write_status(TAKE_LEFT_FORK, philo);
-	set_long(&philo->mutex_philo, &philo->t_last_meal, MILLISECOND);
+	set_long(&philo->mutex_philo, &philo->t_last_meal, gettime(MILLISECOND));
 	philo->nb_meal++;
 	write_status(EAT, philo);
 	precise_usleep(philo->data->t_eat, philo->data);
@@ -40,6 +53,8 @@ static void	*dinner_simulation(void *dt)
 
 	philo = (t_philo *)dt;
 	wait_all_threads(philo->data);
+	increase_long(&philo->data->mutex_data, &philo->data->nb_thread_run);
+	set_long(&philo->mutex_philo, &philo->t_last_meal, gettime(MILLISECOND));
 	while (!simulation_finish(philo->data))
 	{
 		if (philo->full)
@@ -58,12 +73,9 @@ void	simulation(t_data *data)
 
 	i = 0;
 	if (data->nb_max_meal == 0)
-	{
 		return ;
-	}
 	else if (data->nb_philo == 1)
-		printf("OK\n");
-		// handle_one();
+		safe_thread(&data->philo[0].thread_id, one_philo, &data->philo[0], CREATE);
 	else
 	{
 		while (i < data->nb_philo)
@@ -73,13 +85,12 @@ void	simulation(t_data *data)
 			i++;
 		}
 	}
+	safe_thread(&data->monitor, monitor_diner, data, CREATE);
 	data->time_start = gettime(MILLISECOND);
-	printf("%ld\n", data->time_start);
 	set_bool(&data->mutex_data, &data->all_thread_ready, true);
-	i = 0;
-	while (i < data->nb_philo)
-	{
+	i = -1;
+	while (++i < data->nb_philo)
 		safe_thread(&data->philo[i].thread_id, NULL, NULL, JOIN);
-		i++;
-	}
+	set_bool(&data->mutex_data, &data->end_simulation, true);
+	safe_thread(&data->monitor, NULL, NULL, JOIN);
 }

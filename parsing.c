@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:46:30 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/02 10:33:58 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 09:42:31 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,10 +45,10 @@ char	*valid_input(char *str)
 
 void	parsing(t_data *data, char **av)
 {
-	data->nb_philo = (int)ft_atol(valid_input(av[1]));
-	data->t_die = (int)ft_atol(valid_input(av[2]));
-	data->t_eat = (int)ft_atol(valid_input(av[3]));
-	data->t_sleep = (int)ft_atol(valid_input(av[4]));
+	data->nb_philo = ft_atol(valid_input(av[1]));
+	data->t_die = ft_atol(valid_input(av[2])) * 1e3;
+	data->t_eat = ft_atol(valid_input(av[3])) * 1e3;
+	data->t_sleep = ft_atol(valid_input(av[4])) * 1e3;
 	if (av[5])
 		data->nb_max_meal = (int)ft_atol(valid_input(av[5]));
 	else

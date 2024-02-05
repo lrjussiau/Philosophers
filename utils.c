@@ -6,13 +6,13 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:54:23 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/02 11:03:19 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 09:38:08 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "philo.h"
 
-long	gettime(int time_code)
+long	gettime(long time_code)
 {
 	struct timeval	tv;
 
@@ -56,11 +56,11 @@ long	ft_atol(const char *s)
 	return (res);
 }
 
-void	precise_usleep(int usec, t_data *data)
+void	precise_usleep(long usec, t_data *data)
 {
-	int	start;
-	int	laps;
-	int	rem;
+	long	start;
+	long	laps;
+	long	rem;
 
 	start = gettime(MICROSECOND);
 	while (gettime(MICROSECOND) - start < usec)
@@ -69,12 +69,10 @@ void	precise_usleep(int usec, t_data *data)
 			break ;
 		laps = gettime(MICROSECOND) - start;
 		rem = usec - laps;
-		if (rem > 1e3)
+		if (rem > 1e4)
 			usleep(usec / 2);
 		else
 			while (gettime(MICROSECOND) - start < usec)
-			{
 				continue ;
-			}
 	}
 }
