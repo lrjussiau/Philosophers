@@ -42,9 +42,25 @@ static void	eat(t_philo *philo)
 	safe_mutex(&philo->left_fork->fork, UNLOCK);
 }
 
-static void	think(t_philo *philo)
+void	think(t_philo *philo, bool odd_philo)
 {
-	write_status(THINK, philo);
+	if (odd_philo)
+		write_status(THINK, philo);
+
+	long	t_eat;
+	long	t_sleep;
+	long	t_think;
+
+	if (!odd_philo)
+		write_status(THINK, philo);
+	if (philo->data->nb_philo % 2 == 0)
+		return ;
+	t_eat = philo->data->t_eat;
+	t_sleep = philo->data->t_sleep;
+	t_think = (t_eat * 2) - t_sleep;
+	if (t_think < 0)
+		t_think = 0;
+	precise_usleep(t_think * 0.42, philo->data);
 }
 
 static void	*dinner_simulation(void *dt)
@@ -55,6 +71,7 @@ static void	*dinner_simulation(void *dt)
 	wait_all_threads(philo->data);
 	increase_long(&philo->data->mutex_data, &philo->data->nb_thread_run);
 	set_long(&philo->mutex_philo, &philo->t_last_meal, gettime(MILLISECOND));
+	de_synchronize_philos(philo);
 	while (!simulation_finish(philo->data))
 	{
 		if (philo->full)
@@ -62,7 +79,7 @@ static void	*dinner_simulation(void *dt)
 		eat(philo);
 		write_status(SLEEP, philo);
 		precise_usleep(philo->data->t_sleep, philo->data);
-		think(philo);
+		think(philo, false);
 	}
 	return (NULL);
 }

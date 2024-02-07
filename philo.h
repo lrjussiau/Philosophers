@@ -101,6 +101,7 @@ void	error(char *str);
 long	ft_atol(const char *s);
 long	gettime(long time_code);
 void	precise_usleep(long usec, t_data *data);
+void	de_synchronize_philos(t_philo *philo);
 
 //Parsing
 bool	is_space(char c);
@@ -115,6 +116,7 @@ void	simulation(t_data *data);
 void	increase_long(pthread_mutex_t *mutex, long *value);
 bool	all_thread_run(pthread_mutex_t *mutex, long *thread, long philo_nb);
 void	*monitor_diner(void *value);
+void	think(t_philo *philo, bool odd_philo);
 
 //Safe Function
 void	*safe_malloc(unsigned int bytes);
