@@ -87,7 +87,7 @@ void	precise_usleep(long usec, t_data *data)
 		laps = gettime(MICROSECOND) - start;
 		rem = usec - laps;
 		if (rem > 1e4)
-			usleep(usec / 2);
+			usleep(rem / 2);
 		else
 			while (gettime(MICROSECOND) - start < usec)
 				continue ;
