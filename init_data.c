@@ -14,8 +14,33 @@
 
 static void philo_init(t_data *data)
 {
-    
+    int     i;
+    t_philo *philo;
+
+    i = 0;
+    while (i < data->nb_philo)
+    {
+        philo = data->philo + i;
+        philo->id = i;
+        philo->nb_meal = 0;
+        philo->full = false;
+        philo->data = data;
+        
+        
+    }
 }
+
+typedef struct s_philo
+{
+	int			id;
+	int			nb_meal;
+	bool		full;
+	int			t_last_meal;
+	t_fork		*left_fork;
+	t_fork		*right_fork;
+	pthread_t	thread_id;
+	t_data		*data;
+}		t_philo;
 
 void    init(t_data *data)
 {
@@ -29,6 +54,7 @@ void    init(t_data *data)
     {
         safe_mutex(&data->fork[i].fork, INIT);
         data->fork[i].id = i;
+        i++;
     }
     philo_init(data);
 }
