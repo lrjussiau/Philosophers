@@ -6,7 +6,7 @@
 /*   By: ljussiau <ljussiau@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/24 10:54:23 by ljussiau          #+#    #+#             */
-/*   Updated: 2024/02/05 10:51:20 by ljussiau         ###   ########.fr       */
+/*   Updated: 2024/02/05 10:54:47 by ljussiau         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ void	precise_usleep(long usec, t_data *data)
 		laps = gettime(MICROSECOND) - start;
 		rem = usec - laps;
 		if (rem > 1e4)
-			usleep(usec / 2);
+			usleep(rem / 2);
 		else
 			while (gettime(MICROSECOND) - start < usec)
 				continue ;
