@@ -36,3 +36,17 @@ void	increase_long(pthread_mutex_t *mutex, long *value)
 	(*value)++;
 	safe_mutex(mutex, UNLOCK);
 }
+
+void	de_synchronize_philos(t_philo *philo)
+{
+	if (philo->data->nb_philo % 2 == 0)
+	{
+		if (philo->id % 2 == 0)
+			precise_usleep(3e4, philo->data);
+	}
+	else
+	{
+		if (philo->id % 2)
+			think(philo, true);
+	}
+}

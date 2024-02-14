@@ -22,14 +22,14 @@ void	write_status(t_status status, t_philo *philo)
 	safe_mutex(&philo->data->mutex_write, LOCK);
 	if ((status == TAKE_LEFT_FORK || status == TAKE_RIGHT_FORK)
 		&& !simulation_finish(philo->data))
-		printf("%6ld %d has taken a fork\n", laps, philo->id);
+		printf("%ld %d has taken a fork\n", laps, philo->id);
 	if (status == EAT && !simulation_finish(philo->data))
-		printf("%6ld %d is eating\n", laps, philo->id);
+		printf("%ld %d is eating\n", laps, philo->id);
 	if (status == SLEEP && !simulation_finish(philo->data))
-		printf("%6ld %d is sleeping\n", laps, philo->id);
+		printf("%ld %d is sleeping\n", laps, philo->id);
 	if (status == THINK && !simulation_finish(philo->data))
-		printf("%6ld %d is thinking\n", laps, philo->id);
+		printf("%ld %d is thinking\n", laps, philo->id);
 	if (status == DIED)
-		printf("%6ld %d died !\n", laps, philo->id);
+		printf("%ld %d died !\n", laps, philo->id);
 	safe_mutex(&philo->data->mutex_write, UNLOCK);
 }
